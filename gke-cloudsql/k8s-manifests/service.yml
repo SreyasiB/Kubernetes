@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-app-service
+  namespace: flask-cloudsql
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-app
+  ports:
+  - port: 80
+    targetPort: 5000
+    
+

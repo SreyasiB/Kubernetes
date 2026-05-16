@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: db-config
+  namespace: flsk-cloudsql
+data:
+  DB_HOST: "127.0.0.1"
+  DB_NAME: "mydb"

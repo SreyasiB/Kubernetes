@@ -1,0 +1,52 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: flask-app-deployment
+  namespace: flask-cloudsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      serviceAccountName: ksa-flask-app
+      containers:
+      - name: flask-app
+        image: us-central1-docker.pkg.dev/project-20e6da9c-ffbf-4fee-b13/demo-repo/flaskapp:v1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_HOST
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.33.7
+        command:
+        - "/cloud_sql_proxy"
+        - "-instances=project-20e6da9c-ffbf-4fee-b13:us-central1:mysql-instance=tcp:3306"
+
+
+
+
