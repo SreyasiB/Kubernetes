@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gke-gcs-dep
+  namespace: gcs-uploader
+  labels:
+    app: gke-gcs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gke-gcs
+  template:
+    metadata:
+      labels:
+        app: gke-gcs
+    spec:
+      serviceAccountName: ksa-gke-gcs-demo
+      containers:
+      - name: gke-gcs-app
+        image: us-central1-docker.pkg.dev/project-20e6da9c-ffbf-4fee-b13/demo-repo/gcs-uploader:latest
+        env:
+        - name: GCS_BUCKET_NAME
+          value: gcs-gke
+            
