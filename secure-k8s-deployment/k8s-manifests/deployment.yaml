@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-deploy
+  namespace: secure-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      serviceAccountName: app-ksa
+      
+      # Pod-level security: Prevents any container in the pod from running as root
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+      - name: hello-app
+        image: asia-south1-docker.pkg.dev/$PROJECT_ID/hello-app-repo/hello-app:v1
+        ports:
+        - containerPort: 8080
+        
+        # Container-level security: Locks down the specific process
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
