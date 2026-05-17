@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broken-service
+  namespace: gke-log-analysis-agent
+
+spec:
+  selector:
+    app: DOES-NOT-EXIST
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

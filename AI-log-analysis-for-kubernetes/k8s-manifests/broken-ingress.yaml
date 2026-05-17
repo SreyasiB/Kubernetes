@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: broken-ingress
+  namespace: gke-log-analysis-agent
+
+spec:
+  rules:
+  - host: demo.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: demo-service
+            port:
+              number: 80
