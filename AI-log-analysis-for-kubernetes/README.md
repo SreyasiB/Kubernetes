@@ -77,6 +77,9 @@ gcloud container clusters get-credentials ai-agent-cluster \
 
 #Verify:
 kubectl get nodes
+
+#Create namespace
+kubectl create namespace gke-log-analysis-agent
 ```
 
 ---
